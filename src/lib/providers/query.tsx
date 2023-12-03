@@ -3,14 +3,14 @@
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { FC, ReactNode, useMemo } from "react";
+import { FC, ReactNode, useState } from "react";
 
 type Props = {
   children: ReactNode
 };
 
 export const QueryProvider: FC<Props> = ({ children }) => {
-  const { queryClient, persister } = useMemo(() => {
+  const [{ queryClient, persister }] = useState(() => {
     const qc = new QueryClient({
       defaultOptions: {
         queries: {
@@ -24,12 +24,12 @@ export const QueryProvider: FC<Props> = ({ children }) => {
     });
 
     return { queryClient: qc, persister: qcp };
-  }, []);
+  });
 
   return (
     <PersistQueryClientProvider
       client={queryClient}
-      persistOptions={{ persister: persister }}
+      persistOptions={{ persister }}
     >
       {children}
     </PersistQueryClientProvider>
